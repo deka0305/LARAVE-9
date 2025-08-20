@@ -245,6 +245,63 @@
             color: #333;
         }
 
+        /* Keterangan agar proporsional */
+        .task-detail.keterangan {
+            word-break: break-word;
+            max-width: 600px;
+            max-height: 600px;
+            overflow-y: auto;
+            white-space: pre-line;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .task-detail.keterangan::-webkit-scrollbar {
+            width: 100px;
+        }
+
+        .tasks-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+            /* Minimal tinggi */
+        }
+
+        #tasks-list {
+            flex: 1;
+            max-height: 600px;
+            /* Atur tinggi maksimal */
+            overflow-y: auto;
+            /* Scroll vertikal jika melebihi */
+            padding-right: 8px;
+            /* Sedikit ruang untuk scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #f1f1f1;
+        }
+
+        #tasks-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #tasks-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        #tasks-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        #tasks-list::-webkit-scrollbar-thumb:hover {
+            background: #5a67d8;
+        }
+
         .status {
             display: inline-block;
             padding: 6px 12px;
@@ -312,7 +369,7 @@
     <div class="container">
         <div class="header">
             <h1>📅 Monitoring Tugas Tim</h1>
-            <p>Sistem monitoring tugas berbasis kalender untuk manajemen tim yang efektif</p>
+            <p>Sistem monitoring tugas berbasis kalender untuk manajemen tim</p>
         </div>
 
         <div class="content">
@@ -496,8 +553,12 @@
                     <div class="task-detail">
                         <strong>📝 DPT:</strong> ${task.departemen}
                     </div>
+
                     <div class="task-detail">
-                        <strong>📝 Keterangan:</strong> ${task.keterangan}
+                        <strong>Keterangan:</strong>
+                    </div>
+                    <div class="task-detail keterangan">
+                        <strong></strong> ${task.keterangan}
                     </div>
                 </div>
             `;

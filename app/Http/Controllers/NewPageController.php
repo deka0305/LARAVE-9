@@ -89,21 +89,14 @@ class NewPageController extends Controller
             $symptom = property_exists($item, 'SYMPTOM') ? $item->SYMPTOM : (property_exists($item, 'symptom') ? $item->symptom : null);
             $shortdesc = property_exists($item, 'SHORTDESCRIPTION') ? $item->SHORTDESCRIPTION : (property_exists($item, 'shortdescription') ? $item->shortdescription : null);
 
-            // $formattedTasks[] = [
-            //     'id' => $id,
-            //     'title' => 'Tiket #' . ($id ?? 'N/A'),
-            //     'pic' => $pic,
-            //     'date' => $date ? date('Y-m-d', strtotime($date)) : null,
-            //     'status' => $status,
-            //     'keterangan' => !empty($symptom) ? $symptom : ($shortdesc ?? '-')
-            // ];
             $formattedTasks[] = [
                 'id' => $id,
                 'title' => 'Tiket #' . ($id ?? 'N/A'),
                 'pic' => $pic,
                 'date' => $date ? \Carbon\Carbon::parse($date)->format('Y-m-d') : null, // Format ke Y-m-d
                 'status' => $status,
-                'keterangan' => !empty($symptom) ? $symptom : ($shortdesc ?? '-')
+                'keterangan' => $symptom ?: '-',
+                'departemen' => $shortdesc ?: '-' // Default to '-' if shortdesc is null
             ];
         }
         // dd($formattedTasks); // Debugging line to check the structure of $formattedTasks
@@ -121,32 +114,12 @@ class NewPageController extends Controller
 
         $tasks = [];
         foreach ($results as $item) {
-            // $id = trim($item->CODE ?? '');
-            // $pic = $item->DEFAULTASSIGNEDTOUSERID ?? '-';
-            $id = property_exists($item, 'CODE') ? $item->CODE : (property_exists($item, 'code') ? $item->code : null);
-            $pic = property_exists($item, 'DEFAULTASSIGNEDTOUSERID') ? $item->DEFAULTASSIGNEDTOUSERID : (property_exists($item, 'defaultassignedtouserid') ? $item->defaultassignedtouserid : '-');
-            $date = property_exists($item, 'IDENTIFIEDDATE') ? $item->IDENTIFIEDDATE : (property_exists($item, 'identifieddate') ? $item->identifieddate : null);
-            $status = property_exists($item, 'STATUS') ? $item->STATUS : (property_exists($item, 'status') ? $item->status : null);
-            $symptom = property_exists($item, 'SYMPTOM') ? $item->SYMPTOM : (property_exists($item, 'symptom') ? $item->symptom : null);
-            // $shortdesc = property_exists($item, 'SHORTDESCRIPTION') ? $item->SHORTDESCRIPTION : (property_exists($item, 'shortdescription') ? $item->shortdescription : null);
-          
-
-            
-
-            $rawDate = null;
-            if (property_exists($item, 'IDENTIFIEDDATE')) $rawDate = $item->IDENTIFIEDDATE;
-            elseif (property_exists($item, 'identifieddate')) $rawDate = $item->identifieddate;
-            elseif (property_exists($item, 'IdentifiedDate')) $rawDate = $item->IdentifiedDate;
-
-            $date = null;
-            if ($rawDate) {
-                try {
-                    $date = \Carbon\Carbon::parse($rawDate)->format('Y-m-d');
-                } catch (\Exception $e) {
-                    $date = null;
-                }
-            }
-
+            $CODE = $item->code ?? null;
+            $DEFAULTASSIGNEDTOUSERID = $item->defaultassignedtouserid ?? '-';
+            $IDENTIFIEDDATE = $item->identifieddate ?? null;    // Ambil field sesuai format permintaan
+            $STATUS = $item->status ?? null;                    // Ambil field sesuai format permintaan
+            $SYMPTOM = isset($item->symptom) ? preg_replace('/[^A-Za-z0-9 .,()-]/', '', $item->symptom) : null;
+            $SHORTDESCRIPTION = $item->shortdescription ?? null;
             $statusLabel = match ((string) ($item->status ?? '')) {
                 '1' => 'Pending',
                 '2' => 'Proses',
@@ -155,20 +128,17 @@ class NewPageController extends Controller
                 default => 'Unknown'
             };
 
-            $symptom = $item->symtom ?? '';
-            $shortdesc = $item->shortdescription ?? '-';
-
             $tasks[] = [
-                'id' => $id,
-                'title' => 'Tiket #' . ($id ?: 'N/A'),
-                'pic' => $pic,
-                'date' => $date,
+                'id' => $CODE ?? null,
+                'title' => 'Tiket #' . ($CODE ?? 'N/A'),
+                'pic' => $DEFAULTASSIGNEDTOUSERID,
+                'date' => $IDENTIFIEDDATE ? \Carbon\Carbon::parse($IDENTIFIEDDATE)->format('Y-m-d') : null, // Format ke Y-m-d
                 'status' => $statusLabel,
-                'keterangan' =>  $symptom,
-                'departemen' => $shortdesc
+                'keterangan' => $SYMPTOM,
+                'departemen' => $SHORTDESCRIPTION
             ];
         }
-        
+
         return response()->json($tasks);
     }
 

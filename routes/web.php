@@ -20,13 +20,13 @@ use App\Http\Controllers\OrderController;
 */
 
 // Route::get('/', [NewPageController::class, 'index'])->name('home');
-Route::get('/', [OrderController::class, 'dashboard'])->name('dashboard');
+// Route::get('/', [OrderController::class, 'dashboard'])->name('dashboard');
 
 // Add a route for the dashboard page
 
 Route::get('/newpage', [NewPageController::class, 'index'])->name('newpage');
 Route::get('/tiket', [NewPageController::class, 'tiket'])->name('tiket');
-Route::get('/calender', [NewPageController::class, 'tampiltiket'])->name('calender');
+Route::get('/', [NewPageController::class, 'tampiltiket'])->name('calender');
 Route::get('/api/tasks', [NewPageController::class, 'getTasksApi']);
 
 
