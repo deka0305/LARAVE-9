@@ -475,11 +475,15 @@
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'calendar-day';
-                dayElement.style.position = 'relative'; // Wajib untuk positioning titik
+                dayElement.style.position = 'relative';
                 dayElement.textContent = day;
 
+                // Fix: tanggal JS UTC offset, agar tidak bergeser
                 const date = new Date(year, month, day);
-                const dateString = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                // Set jam ke 00:00:00 lokal agar tidak offset
+                date.setHours(0, 0, 0, 0);
+                // Format YYYY-MM-DD manual agar tidak offset
+                const dateString = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 
                 // Cek apakah ada tugas di tanggal ini
                 const hasTask = tasks.some(task => task.date === dateString);
@@ -488,18 +492,21 @@
                 }
 
                 // Check if today
-                if (date.toDateString() === today.toDateString()) {
+                const todayString = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+                if (dateString === todayString) {
                     dayElement.classList.add('today');
                 }
 
                 // Check if selected
-                if (date.toDateString() === selectedDate.toDateString()) {
+                const selectedString = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth()+1).padStart(2,'0')}-${String(selectedDate.getDate()).padStart(2,'0')}`;
+                if (dateString === selectedString) {
                     dayElement.classList.add('selected');
                 }
 
                 // Add click event
                 dayElement.addEventListener('click', () => {
                     selectedDate = new Date(year, month, day);
+                    selectedDate.setHours(0,0,0,0);
                     renderCalendar();
                     renderTasks();
                 });
@@ -521,8 +528,9 @@
         function renderTasks() {
             selectedDateElement.textContent = `Tanggal: ${selectedDate.toLocaleDateString('id-ID')}`;
 
-            const formattedSelectedDate = selectedDate.toISOString().split('T')[0];
-            const filteredTasks = tasks.filter(task => task.date === formattedSelectedDate);
+            // Format tanggal manual agar tidak offset
+            const selectedString = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth()+1).padStart(2,'0')}-${String(selectedDate.getDate()).padStart(2,'0')}`;
+            const filteredTasks = tasks.filter(task => task.date === selectedString);
 
             tasksList.innerHTML = '';
 
