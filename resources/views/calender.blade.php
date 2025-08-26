@@ -374,7 +374,16 @@
 
         <div class="content">
             <div class="calendar-section">
-                <h2 class="section-title">Kalender Tugas</h2>
+                <h2 class="section-title">Kalender Tugas
+                    <a id="grafik-link" href="/grafik" title="Lihat Grafik Tugas" style="margin-left:12px;vertical-align:middle;display:inline-block;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;">
+                            <rect x="3" y="13" width="3" height="8" rx="1.5" fill="#667eea"/>
+                            <rect x="8" y="9" width="3" height="12" rx="1.5" fill="#764ba2"/>
+                            <rect x="13" y="5" width="3" height="16" rx="1.5" fill="#4CAF50"/>
+                            <rect x="18" y="2" width="3" height="19" rx="1.5" fill="#FFC107"/>
+                        </svg>
+                    </a>
+                </h2>
                 <div class="calendar-header">
                     <div class="month-nav">
                         <button class="nav-btn" id="prev-month">←</button>
@@ -415,9 +424,9 @@
             }
         }
 
-        // State
-        let currentDate = new Date();
-        let selectedDate = new Date();
+    // State
+    let currentDate = new Date();
+    let selectedDate = new Date();
 
         // DOM Elements
         const calendarGrid = document.getElementById('calendar-grid');
@@ -447,6 +456,12 @@
                 month: 'long',
                 year: 'numeric'
             });
+
+            // Update grafik link agar sesuai bulan yang dipilih
+            const grafikLink = document.getElementById('grafik-link');
+            const monthParam = currentDate.getMonth() + 1;
+            const yearParam = currentDate.getFullYear();
+            grafikLink.href = `/grafik?month=${monthParam}&year=${yearParam}`;
 
             calendarGrid.innerHTML = '';
 

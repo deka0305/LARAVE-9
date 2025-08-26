@@ -27,7 +27,11 @@ use App\Http\Controllers\OrderController;
 Route::get('/newpage', [NewPageController::class, 'index'])->name('newpage');
 Route::get('/tiket', [NewPageController::class, 'tiket'])->name('tiket');
 Route::get('/', [NewPageController::class, 'tampiltiket'])->name('calender');
+
 Route::get('/api/tasks', [NewPageController::class, 'getTasksApi']);
+Route::get('/grafik', function() {
+	return view('grafik');
+});
 
 
 

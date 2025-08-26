@@ -69,11 +69,19 @@ class NewPageController extends Controller
     public function tampiltiket()
     {
 
-        $query = "SELECT p.*, d.SHORTDESCRIPTION 
-                  FROM PMBREAKDOWNENTRY p 
-                  LEFT JOIN DEPARTMENT d ON d.CODE = p.DEPARTMENTCODE 
-                  WHERE BREAKDOWNTYPE = 'SF' AND p.CODE LIKE '%BDIT%' AND DEFAULTASSIGNEDTOUSERID <> ''
-                  ORDER BY IDENTIFIEDDATE DESC
+        $query = "SELECT
+                    p.*,
+                    SUBSTR(a.VALUESTRING, 1, 3) AS SHORTDESCRIPTION
+                FROM
+                    PMBREAKDOWNENTRY p
+                LEFT JOIN ADSTORAGE a ON a.UNIQUEID = p.ABSUNIQUEID AND a.FIELDNAME = 'ApprovalDeptUserCode'
+                LEFT JOIN DEPARTMENT d ON d.CODE = p.DEPARTMENTCODE
+                WHERE
+                    BREAKDOWNTYPE = 'SF'
+                    AND p.CODE LIKE '%BDIT%'
+                    AND DEFAULTASSIGNEDTOUSERID <> ''
+                ORDER BY
+                    IDENTIFIEDDATE DESC
                   ";
         $results = DB::connection('ibmi')->select($query);
 
@@ -104,11 +112,19 @@ class NewPageController extends Controller
     }
     public function getTasksApi()
     {
-        $query = "SELECT p.*, d.SHORTDESCRIPTION 
-              FROM PMBREAKDOWNENTRY p 
-              LEFT JOIN DEPARTMENT d ON d.CODE = p.DEPARTMENTCODE 
-              WHERE BREAKDOWNTYPE = 'SF' AND p.CODE LIKE '%BDIT%' AND DEFAULTASSIGNEDTOUSERID <> ''
-              ORDER BY IDENTIFIEDDATE DESC";
+        $query = "SELECT
+                    p.*,
+                    SUBSTR(a.VALUESTRING, 1, 3) AS SHORTDESCRIPTION
+                FROM
+                    PMBREAKDOWNENTRY p
+                LEFT JOIN ADSTORAGE a ON a.UNIQUEID = p.ABSUNIQUEID AND a.FIELDNAME = 'ApprovalDeptUserCode'
+                LEFT JOIN DEPARTMENT d ON d.CODE = p.DEPARTMENTCODE
+                WHERE
+                    BREAKDOWNTYPE = 'SF'
+                    AND p.CODE LIKE '%BDIT%'
+                    AND DEFAULTASSIGNEDTOUSERID <> ''
+                ORDER BY
+                    IDENTIFIEDDATE DESC";
 
         $results = DB::connection('ibmi')->select($query);
 
