@@ -28,7 +28,6 @@ Route::get('/newpage', [NewPageController::class, 'index'])->name('newpage');
 Route::get('/tiket', [NewPageController::class, 'tiket'])->name('tiket');
 Route::get('/', [NewPageController::class, 'tampiltiket'])->name('calender');
 
-Route::get('/api/tasks', [NewPageController::class, 'getTasksApi']);
 Route::get('/grafik', function() {
 	return view('grafik');
 });
@@ -44,6 +43,5 @@ Route::get('/orders', [OrderController::class, 'dashboard']);
 Route::get('/orders/{id}/edit', [OrderController::class, 'edit'])->name('orders.edit');
 Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
 Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
-
 
 
